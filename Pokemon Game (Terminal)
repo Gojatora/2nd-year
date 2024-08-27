@@ -2,6 +2,7 @@ import random # Import the random module to utilize random integer and random un
 import time # Imports the time module
 from tabulate import tabulate # Imports the tabulate module to create tables from existing data
 #time.sleep() function puts the program on hold for a specified second
+#count = 0 is used as a tool to iterate all values in lists and dictionaries
 
 pokemon_dictionary = {"Pikachu": 50,
            "Charmander": 55,
@@ -155,8 +156,6 @@ def Continue(): #This function serves as a gameplay replay a when the user chose
         print("")
         print("Your Opponent's Pokemon is absorbing your Pokemon's power...")
         time.sleep(2)
-        print(f"Computer's Pokemon's New Power: {computer_current[1]}")
-        time.sleep(2)
         print("")
         print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
         time.sleep(2)
@@ -182,7 +181,7 @@ def New_1(): #This function serves as a gameplay replay a when the user chose to
     print("Here is the list of the available Pokemon you can choose")
     time.sleep(1)
     count = 0
-    for i in pokemon_dictionary.keys(): #This iterates the following Pokemon and prints them one by one
+    for i in pokemon_dictionary.keys():
         print(f"{i}", end=" ")
         count += 1
         time.sleep(1)
@@ -293,8 +292,6 @@ def New_1(): #This function serves as a gameplay replay a when the user chose to
         print("")
         print("Your Opponent's Pokemon is absorbing your Pokemon's power...")
         time.sleep(2)
-        print(f"Computer's Pokemon's New Power: {computer_current[1]}")
-        time.sleep(2)
         print("")
         print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
         time.sleep(2)
@@ -314,13 +311,13 @@ def New_1(): #This function serves as a gameplay replay a when the user chose to
 
 def New_2(): #This function serves as a gameplay replay a when the user wants to select a new Pokemon after losing for the next battle.
     global round #This makes the round variable available for manipulation while inside a function.
-    print(f"You chose to select a new Pokemon while the Computer will keep its Pokemon Preparing for Battle number {round}")
+    print(f"You chose to select a new Pokemon while the Computer will keep its Pokemon. Preparing for Battle number {round}")
     time.sleep(2)
     print("")
     print("Here is the list of the available Pokemon you can choose")
     time.sleep(1)
     count = 0
-    for i in pokemon_dictionary.keys(): #This iterates the following Pokemon and prints them one by one
+    for i in pokemon_dictionary.keys():
         print(f"{i}", end=" ")
         count += 1
         time.sleep(1)
@@ -420,8 +417,6 @@ def New_2(): #This function serves as a gameplay replay a when the user wants to
         print("")
         print("Your Opponent's Pokemon is absorbing your Pokemon's power...")
         time.sleep(2)
-        print(f"Computer's Pokemon's New Power: {computer_current[1]}")
-        time.sleep(2)
         print("")
         print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
         time.sleep(2)
@@ -441,9 +436,11 @@ def New_2(): #This function serves as a gameplay replay a when the user wants to
 
 def Adjust_Power(): #This function adjust the base power of the Pokemon every next round.
     Base_Power = list(pokemon_dictionary.values())
+    count = 0
     for i in list(pokemon_dictionary):
         random_power_percentage = random.uniform(0.3, 0.5) #Assigns a random float value as percentage from the following range
         pokemon_dictionary[i] = Base_Power[count] + int(Base_Power[count]*random_power_percentage)
+        count += 1
 
 
 
@@ -453,8 +450,33 @@ User = input("Enter your name: ")
 count = 0
 print("")
 print(f"Welcome, {User}")
-print("")
 time.sleep(1)
+print("")
+print("Rules of Pokemon Battle:")
+time.sleep(1)
+print("Before each battle starts, you and your opponent will select a Pokemon, each with their unique base power")
+time.sleep(3)
+print("After choosing a Pokemon, the program will calculate its final power based on whether they are weak or strong.")
+time.sleep(3)
+print("After calculating the final powers of both Pokemon, they will now face each other.")
+time.sleep(3)
+print("The winner will be decided based on which Pokemon has greater power")
+time.sleep(3)
+print("It is also possible to have a draw in case both Pokemon has equal power")
+time.sleep(3)
+print("After each battle, the program will display the current standing and battle summary")
+time.sleep(3)
+print("After displaying the current standing and battle summary, you will be provided the following options:")
+time.sleep(3)
+print("1. If you win a battle, you can keep playing the game by continuing with your current pokemon or selecting a new Pokemon;")
+time.sleep(1)
+print("2. If you lost a battle, you can also keep playing the by selecting a new Pokemon; or")
+time.sleep(1)
+print("3. You can choose to end the game by entering any key.")
+time.sleep(1)
+print("That's it for the rules. Now, select a Pokemon to be the very best that no one ever was!")
+time.sleep(3)
+print("")
 print("Here is the list of the available Pokemon you can choose")
 time.sleep(1)
 for i in pokemon_dictionary.keys(): #This iterates the following Pokemon and prints them one by one
@@ -575,8 +597,6 @@ else:
     time.sleep(2)
     print("")
     print("Your Opponent's Pokemon is absorbing your Pokemon's power...")
-    time.sleep(2)
-    print(f"Computer's Pokemon's New Power: {computer_current[1]}")
     time.sleep(2)
     print("")
     print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
