@@ -22,6 +22,10 @@ computer_current = [] # Used as a storage for its chosen Pokemon and its final p
 User_wins = [0] # Serves as a counter for the user's win
 Computer_wins = [0] # Serves as a counter for the computer's win
 
+Battle_Summary = [] # This variable serves as history logs for each battle simulation
+
+round = 1 # This serves as counter for the amount of battles executed
+
 def User_Final_Power(Pick): # This function is used to calculate final power of the user's Pokemon
     user_current.append(Pick)
     print("Analyzing Level")
@@ -42,7 +46,7 @@ def User_Final_Power(Pick): # This function is used to calculate final power of 
         user_current.append(computed_power)
         return computed_power
 
-def Computer_Final_Power(Pick): #Function used to calculate final power of the computer's Pokemon
+def Computer_Final_Power(Pick): #This Function is used to calculate final power of the computer's Pokemon
     computer_current.append(Pick)
     Level_designator = random.randint(0,1)  # This decides the Pokemon's characteristics; 0 for "Weak" and 1 for Strong.
     if Level_designator == 0:
@@ -57,383 +61,6 @@ def Computer_Final_Power(Pick): #Function used to calculate final power of the c
         computer_current.append(computed_power)
         return computed_power
 
-def Continue(): #This function serves as a gameplay replay a when the user chose to continue with its chosen Pokemon for the next battle.
-    global round #This makes the round variable available for manipulation while inside a function.
-
-    print(f"You chose to continue with your current Pokemon while the Computer will select its new Pokemon. Preparing for Battle number {round}")
-    time.sleep(2)
-    print("Computer picking its Pokemon")
-
-    Computer_Pick = random.choice(list(pokemon_dictionary))
-
-    Computer_Final_Power(Computer_Pick)
-
-    print("")
-    time.sleep(2)
-    print(f"Computer selected its Pokemon")
-    time.sleep(2)
-
-
-    print("")
-    print("It's time to Battle!")
-    time.sleep(1)
-    print("")
-    print(f"{User} vs Computer")
-    time.sleep(1)
-    print("")
-    print(f"{User}'s Pokemon: {user_current[0]}\nPower: {user_current[1]}")
-    time.sleep(3)
-    print("")
-    print(f"Computer's Pokemon: {computer_current[0]}\nPower: {computer_current[1]}")
-    time.sleep(3)
-    print("")
-    print("Deciding the winner")
-    print("")
-    time.sleep(3)
-    if user_current[1] > computer_current[1]:
-        print(f"{User} Wins!")
-        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", f"{User} Wins"])
-        table = tabulate(Battle_Summary, headers=headers)
-        New_Power = user_current[1] + int(computer_current[1] * 0.2)
-        user_current[1] = New_Power
-        User_wins[0] += 1
-        time.sleep(2)
-        print("")
-        print("Your Pokemon is absorbing your opponents power...")
-        time.sleep(2)
-        print(f"{User}'s Pokemon's New Power: {user_current[1]}")
-        time.sleep(2)
-        print("")
-        print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-        time.sleep(2)
-        print("")
-        print(f"Battle Summary:\n\n{table}")
-        time.sleep(3)
-        print("")
-        round += 1
-        option = input("Continue('c'), Choose a new Pokemon('n'), or Quit(any character): ").lower()
-        if option == "c":
-            computer_current.clear()
-            Adjust_Power()
-            Continue()
-        elif option == "n":
-            user_current.clear()
-            computer_current.clear()
-            New_1()
-        else:
-            print("Game Over. Thanks for Playing!")
-    elif user_current[1] == computer_current[1]:
-        print("Draw!")
-        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Draw"])
-        table = tabulate(Battle_Summary, headers=headers)
-        time.sleep(2)
-        print("")
-        print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-        time.sleep(2)
-        print("")
-        print(f"Battle Summary:\n\n{table}")
-        time.sleep(3)
-        print("")
-        round += 1
-        option = input("Continue('c'), Choose a new Pokemon('n'), or Quit(any character): ").lower()
-        if option == "c":
-            computer_current.clear()
-            Continue()
-        elif option == "n":
-            user_current.clear()
-            computer_current.clear()
-            New_1()
-        else:
-            print("Game Over. Thanks for Playing!")
-    else:
-        print("Computer Wins!")
-        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Computer Wins"])
-        table = tabulate(Battle_Summary, headers=headers)
-        New_Power = computer_current[1] + int(user_current[1] * 0.2)
-        computer_current[1] = New_Power
-        Computer_wins[0] += 1
-        time.sleep(2)
-        print("")
-        print("Your Opponent's Pokemon is absorbing your Pokemon's power...")
-        time.sleep(2)
-        print("")
-        print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-        time.sleep(2)
-        print("")
-        print(f"Battle Summary:\n\n{table}")
-        time.sleep(3)
-        print("")
-        round += 1
-        option = input("Choose a new Pokemon('n'), or Quit(any character): ").lower()
-        if option == "n":
-            user_current.clear()
-            Adjust_Power()
-            New_2()
-        else:
-            print("Game Over. Thanks for Playing!")
-
-
-def New_1(): #This function serves as a gameplay replay a when the user chose to choose a different Pokemon for the next battle.
-    global round #This makes the round variable available for manipulation while inside a function.
-    print(f"You and the Computer will select a new Pokemon. Preparing for Battle number {round}")
-    time.sleep(2)
-    print("")
-    print("Here is the list of the available Pokemon you can choose")
-    time.sleep(1)
-    count = 0
-    for i in pokemon_dictionary.keys():
-        print(f"{i}", end=" ")
-        count += 1
-        time.sleep(1)
-    print("")
-    while True:
-        User_Pick = input("\nSelect a Pokemon: ").lower().capitalize()
-        if User_Pick in pokemon_dictionary.keys():
-            print(f"You selected {User_Pick}")
-            print("")
-            time.sleep(2)
-            User_Final_Power(User_Pick)
-            break
-        else:
-            print("Enter Valid Pokemon")
-    print("")
-    time.sleep(2)
-    print("Computer picking its Pokemon")
-
-    Computer_Pick = random.choice(list(pokemon_dictionary))
-
-    Computer_Final_Power(Computer_Pick)
-
-    print("")
-    time.sleep(2)
-    print(f"Computer selected its Pokemon")
-    time.sleep(2)
-
-
-    print("")
-    print("It's time to Battle!")
-    time.sleep(1)
-    print("")
-    print(f"{User} vs Computer")
-    time.sleep(1)
-    print("")
-    print(f"{User}'s Pokemon: {user_current[0]}\nPower: {user_current[1]}")
-    time.sleep(3)
-    print("")
-    print(f"Computer's Pokemon: {computer_current[0]}\nPower: {computer_current[1]}")
-    time.sleep(3)
-    print("")
-    print("Deciding the winner")
-    print("")
-    time.sleep(3)
-    if user_current[1] > computer_current[1]:
-        print(f"{User} Wins")
-        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", f"{User} Wins"])
-        table = tabulate(Battle_Summary, headers=headers)
-        New_Power = user_current[1] + int(computer_current[1] * 0.2)
-        user_current[1] = New_Power
-        User_wins[0] += 1
-        time.sleep(2)
-        print("")
-        print("Your Pokemon is absorbing your opponents power...")
-        time.sleep(2)
-        print(f"{User}'s Pokemon's New Power: {user_current[1]}")
-        time.sleep(2)
-        print("")
-        print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-        time.sleep(2)
-        print("")
-        print(f"Battle Summary:\n\n{table}")
-        time.sleep(3)
-        print("")
-        round += 1
-        option = input("Continue('c'), Choose a new Pokemon('n'), or Quit(any character): ").lower()
-        if option == "c":
-            computer_current.clear()
-            Adjust_Power()
-            Continue()
-        elif option == "n":
-            user_current.clear()
-            computer_current.clear()
-            New_1()
-        else:
-            print("Game Over. Thanks for Playing!")
-    elif user_current[1] == computer_current[1]:
-        print("Draw!")
-        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Draw"])
-        table = tabulate(Battle_Summary, headers=headers)
-        time.sleep(2)
-        print("")
-        print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-        time.sleep(2)
-        print("")
-        print(f"Battle Summary:\n\n{table}")
-        time.sleep(3)
-        print("")
-        round += 1
-        option = input("Continue('c'), Choose a new Pokemon('n'), or Quit(any character): ").lower()
-        if option == "c":
-            computer_current.clear()
-            Continue()
-        elif option == "n":
-            user_current.clear()
-            computer_current.clear()
-            New_1()
-        else:
-            print("Game Over. Thanks for Playing!")
-    else:
-        print("Computer Wins!")
-        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Computer Wins"])
-        table = tabulate(Battle_Summary, headers=headers)
-        New_Power = computer_current[1] + int(user_current[1] * 0.2)
-        computer_current[1] = New_Power
-        Computer_wins[0] += 1
-        time.sleep(2)
-        print("")
-        print("Your Opponent's Pokemon is absorbing your Pokemon's power...")
-        time.sleep(2)
-        print("")
-        print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-        time.sleep(2)
-        print("")
-        print(f"Battle Summary:\n\n{table}")
-        time.sleep(3)
-        print("")
-        round += 1
-        option = input("Choose a new Pokemon('n'), or Quit(any character): ").lower()
-        if option == "n":
-            user_current.clear()
-            Adjust_Power()
-            New_2()
-        else:
-            print("Game Over. Thanks for Playing!")
-
-
-def New_2(): #This function serves as a gameplay replay a when the user wants to select a new Pokemon after losing for the next battle.
-    global round #This makes the round variable available for manipulation while inside a function.
-    print(f"You chose to select a new Pokemon while the Computer will keep its Pokemon. Preparing for Battle number {round}")
-    time.sleep(2)
-    print("")
-    print("Here is the list of the available Pokemon you can choose")
-    time.sleep(1)
-    count = 0
-    for i in pokemon_dictionary.keys():
-        print(f"{i}", end=" ")
-        count += 1
-        time.sleep(1)
-    print("")
-    while True:
-        User_Pick = input("\nSelect a Pokemon: ").lower().capitalize()
-        if User_Pick in pokemon_dictionary.keys():
-            print(f"You selected {User_Pick}")
-            print("")
-            time.sleep(2)
-            User_Final_Power(User_Pick)
-            break
-        else:
-            print("Enter Valid Pokemon")
-
-    time.sleep(2)
-
-    print("")
-    print("It's time to Battle!")
-    time.sleep(1)
-    print("")
-    print(f"{User} vs Computer")
-    time.sleep(1)
-    print("")
-    print(f"{User}'s Pokemon: {user_current[0]}\nPower: {user_current[1]}")
-    time.sleep(3)
-    print("")
-    print(f"Computer's Pokemon: {computer_current[0]}\nPower: {computer_current[1]}")
-    time.sleep(3)
-    print("")
-    print("Deciding the winner")
-    print("")
-    time.sleep(3)
-    if user_current[1] > computer_current[1]:
-        print(f"{User} Wins")
-        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", f"{User} Wins"])
-        table = tabulate(Battle_Summary, headers=headers)
-        New_Power = user_current[1] + int(computer_current[1] * 0.2)
-        user_current[1] = New_Power
-        User_wins[0] += 1
-        time.sleep(2)
-        print("")
-        print("Your Pokemon is absorbing your opponents power...")
-        time.sleep(2)
-        print(f"{User}'s Pokemon's New Power: {user_current[1]}")
-        time.sleep(2)
-        print("")
-        print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-        time.sleep(2)
-        print("")
-        print(f"Battle Summary:\n\n{table}")
-        time.sleep(3)
-        print("")
-        round += 1
-        option = input("Continue('c'), Choose a new Pokemon('n'), or Quit(any character): ").lower()
-        if option == "c":
-            computer_current.clear()
-            Adjust_Power()
-            Continue()
-        elif option == "n":
-            user_current.clear()
-            computer_current.clear()
-            New_1()
-        else:
-            print("Game Over. Thanks for Playing!")
-    elif user_current[1] == computer_current[1]:
-        print("Draw!")
-        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Draw"])
-        table = tabulate(Battle_Summary, headers=headers)
-        time.sleep(2)
-        print("")
-        print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-        time.sleep(2)
-        print("")
-        print(f"Battle Summary:\n\n{table}")
-        time.sleep(3)
-        print("")
-        round += 1
-        option = input("Continue('c'), Choose a new Pokemon('n'), or Quit(any character): ").lower()
-        if option == "c":
-            computer_current.clear()
-            Continue()
-        elif option == "n":
-            user_current.clear()
-            computer_current.clear()
-            New_1()
-        else:
-            print("Game Over. Thanks for Playing!")
-    else:
-        print("Computer Wins!")
-        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Computer Wins"])
-        table = tabulate(Battle_Summary, headers=headers)
-        New_Power = computer_current[1] + int(user_current[1] * 0.2)
-        computer_current[1] = New_Power
-        Computer_wins[0] += 1
-        time.sleep(2)
-        print("")
-        print("Your Opponent's Pokemon is absorbing your Pokemon's power...")
-        time.sleep(2)
-        print("")
-        print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-        time.sleep(2)
-        print("")
-        print(f"Battle Summary:\n\n{table}")
-        time.sleep(3)
-        print("")
-        round += 1
-        option = input("Choose a new Pokemon('n'), or Quit(any character): ").lower()
-        if option == "n":
-            user_current.clear()
-            Adjust_Power()
-            New_2()
-        else:
-            print("Game Over. Thanks for Playing!")
-
-
 def Adjust_Power(): #This function adjust the base power of the Pokemon every next round.
     Base_Power = list(pokemon_dictionary.values())
     count = 0
@@ -442,29 +69,177 @@ def Adjust_Power(): #This function adjust the base power of the Pokemon every ne
         pokemon_dictionary[i] = Base_Power[count] + int(Base_Power[count]*random_power_percentage)
         count += 1
 
+def Pokemon_Selection():#This functions initiates Pokemon selection for both the user and computer
+    global round #Allows the round variable to be manipulated inside functions
+    #The following conditional statements checks if both players posesses a Pokemon or not
+    if user_current == [] and computer_current == []:
+        count = 0
+        print(f"\nYou and the Computer will select a new Pokemon. Preparing for Battle number {round}")
+        time.sleep(2)
+        print("\nHere is the list of the available Pokemon you can choose")
+        time.sleep(1)
+        for i in pokemon_dictionary.keys(): #This iterates the following Pokemon and prints them one by one
+            print(f"{i}", end=" ", flush="True")
+            count += 1
+            time.sleep(1)
+
+        while True: #This block of code loops the selection of Pokemon when the user inputs a Pokemon that does not exist within the Pokemon dictionary.
+            User_Pick = input("\nSelect a Pokemon: ").lower().capitalize()
+            if User_Pick in pokemon_dictionary.keys():
+                print(f"You selected {User_Pick}\n")
+                time.sleep(2)
+                User_Final_Power(User_Pick) # Calls the User_Final_Power function where it takes the User_Pick as its argument to calculate its final power based on randomness
+                break
+            else:
+                print("This Pokemon is invalid. Select Again")
+
+        time.sleep(2)
+        print("\nComputer picking its Pokemon")
+
+        Computer_Pick = random.choice(list(pokemon_dictionary)) # This variable receives its Pokemon based on random choice
+
+        Computer_Final_Power(Computer_Pick)# Calls the Computer_Final_Power function where it takes the Computer_Pick as its argument to calculate its final power based on randomness.
+
+        time.sleep(2)
+        print(f"\nComputer selected its Pokemon")
+        time.sleep(2)
+    elif user_current != [] and computer_current == []:
+        print(f"\nYou chose to continue with your current Pokemon while the Computer will select its new Pokemon. Preparing for Battle number {round}")
+        time.sleep(2)
+        print("\nComputer picking its Pokemon")
+
+        Computer_Pick = random.choice(list(pokemon_dictionary)) # This variable receives its Pokemon based on random choice
+
+        Computer_Final_Power(Computer_Pick)# Calls the Computer_Final_Power function where it takes the Computer_Pick as its argument to calculate its final power based on randomness.
+
+        time.sleep(2)
+        print(f"\nComputer selected its Pokemon")
+        time.sleep(2)
+    else:
+        count = 0
+        print(f"\nYou chose to select a new Pokemon while the Computer will keep its Pokemon. Preparing for Battle number {round}")
+        time.sleep(2)
+        print("\nHere is the list of the available Pokemon you can choose")
+        time.sleep(1)
+        for i in pokemon_dictionary.keys(): #This iterates the following Pokemon and prints them one by one
+            print(f"{i}", end=" ", flush="True")
+            count += 1
+            time.sleep(1)
+
+        while True: #This block of code loops the selection of Pokemon when the user inputs a Pokemon that does not exist within the Pokemon dictionary.
+            User_Pick = input("\nSelect a Pokemon: ").lower().capitalize()
+            if User_Pick in pokemon_dictionary.keys():
+                print(f"You selected {User_Pick}\n")
+                time.sleep(2)
+                User_Final_Power(User_Pick) # Calls the User_Final_Power function where it takes the User_Pick as its argument to calculate its final power based on randomness
+                break
+            else:
+                print("This Pokemon is invalid. Select Again")
+    Battle_Simulation()
 
 
-print("Welcome to Pokemon Battle")
-time.sleep(3)
+def Battle_Simulation():#This function is the main gameplay of the program where it compares Pokemon of user and computer to decide the winner
+    global round #Allows the round variable to be manipulated inside functions
+    print("\nIt's time to Battle!")
+    time.sleep(1)
+    print(f"\n{User} vs Computer")
+    time.sleep(1)
+    print(f"\n{User}'s Pokemon: {user_current[0]}\nPower: {user_current[1]}")
+    time.sleep(3)
+    print(f"\nComputer's Pokemon: {computer_current[0]}\nPower: {computer_current[1]}")
+    time.sleep(3)
+    print("\nDeciding the winner")
+    time.sleep(3)
+
+    #The following conditional statements encapsulates the following possibilities of the following battles
+    if user_current[1] > computer_current[1]: 
+        print(f"{User} Wins")
+        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", f"{User} Wins"]) #This records the summary of the battle to be displayed.
+        table = tabulate(Battle_Summary, headers=headers, tablefmt= "pretty") # This creates the table consisting of battle number, user and computers Pokemon and their powers, and the result of the battles
+        New_Power = user_current[1] + int(computer_current[1] * 0.2)
+        user_current[1] = New_Power
+        User_wins[0] += 1
+        time.sleep(2)
+        print("\nYour Pokemon is absorbing your opponents power...")
+        time.sleep(2)
+        print(f"{User}'s Pokemon's New Power: {user_current[1]}")
+        time.sleep(2)
+        print(f"\nStandings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
+        time.sleep(2)
+        print(f"\nBattle Summary:\n\n{table}")
+        time.sleep(3)
+        round += 1
+        option = input("\nContinue('c'), Choose a new Pokemon('n'), or Quit(any character): ").lower()
+        #this nested condition statements represents the options for the user to either continue, select a new Pokemon, or quit the game
+        if option == "c":
+            computer_current.clear()
+            Adjust_Power()
+            Pokemon_Selection()
+        elif option == "n":
+            user_current.clear()
+            computer_current.clear()
+            Pokemon_Selection()
+        else:
+            print("Game Over. Thanks for Playing!")
+    
+    elif user_current[1] == computer_current[1]:
+        print("Draw!")
+        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Draw"]) #This records the summary of the battle to be displayed.
+        table = tabulate(Battle_Summary, headers=headers, tablefmt= "pretty") # This creates the table consisting of battle number, user and computers Pokemon and their powers, and the result of the battles
+        time.sleep(2)
+        print(f"\nStandings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
+        time.sleep(2)
+        print(f"\nBattle Summary:\n\n{table}")
+        time.sleep(3)
+        round += 1
+        option = input("\nChoose a new Pokemon('n'), or Quit(any character): ").lower()
+        #this nested condition statements represents the options for the user to either continue, select a new Pokemon, or quit the game
+        if option == "n":
+            user_current.clear()
+            computer_current.clear()
+            Pokemon_Selection()
+        else:
+            print("Game Over. Thanks for Playing!")
+    else:
+        print("Computer Wins!")
+        Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Computer Wins"]) #This records the summary of the battle to be displayed.
+        table = tabulate(Battle_Summary, headers=headers, tablefmt= "pretty") # This creates the table consisting of battle number, user and computers Pokemon and their powers, and the result of the battles
+        New_Power = computer_current[1] + int(user_current[1] * 0.2)
+        computer_current[1] = New_Power
+        Computer_wins[0] += 1
+        time.sleep(2)
+        print("\nYour Opponent's Pokemon is absorbing your Pokemon's power...")
+        time.sleep(2)
+        print(f"\nStandings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
+        time.sleep(2)
+        print(f"\nBattle Summary:\n\n{table}")
+        time.sleep(3)
+        round += 1
+        option = input("\nChoose a new Pokemon('n'), or Quit(any character): ").lower()
+        #this nested condition statements represents the options for the user to either select a new Pokemon, or quit the game
+        if option == "n":
+            user_current.clear()
+            Adjust_Power()
+            Pokemon_Selection()
+        else:
+            print("Game Over. Thank You for Playing!")
+
 User = input("Enter your name: ")
-count = 0
-print("")
-print(f"Welcome, {User}")
+print(f"Greetings {User}, Welcome to Pokemon Battle")
+time.sleep(3)
+print("\nRules of Pokemon Battle:")
 time.sleep(1)
-print("")
-print("Rules of Pokemon Battle:")
-time.sleep(1)
-print("Before each battle starts, you and your opponent will select a Pokemon, each with their unique base power")
+print("Before each battle starts, you and your opponent will select a Pokemon, each with their unique base power.")
 time.sleep(3)
 print("After choosing a Pokemon, the program will calculate its final power based on whether they are weak or strong.")
 time.sleep(3)
 print("After calculating the final powers of both Pokemon, they will now face each other.")
 time.sleep(3)
-print("The winner will be decided based on which Pokemon has greater power")
+print("The winner will be decided based on which Pokemon has greater power.")
 time.sleep(3)
-print("It is also possible to have a draw in case both Pokemon has equal power")
+print("It is also possible to have a draw in case both Pokemon has equal power.")
 time.sleep(3)
-print("After each battle, the program will display the current standing and battle summary")
+print("After each battle, the program will display the current standing and battle summary.")
 time.sleep(3)
 print("After displaying the current standing and battle summary, you will be provided the following options:")
 time.sleep(3)
@@ -473,144 +248,10 @@ time.sleep(1)
 print("2. If you lost a battle, you can also keep playing the by selecting a new Pokemon; or")
 time.sleep(1)
 print("3. You can choose to end the game by entering any key.")
-time.sleep(1)
+time.sleep(3)
 print("That's it for the rules. Now, select a Pokemon to be the very best that no one ever was!")
 time.sleep(3)
-print("")
-print("Here is the list of the available Pokemon you can choose")
-time.sleep(1)
-for i in pokemon_dictionary.keys(): #This iterates the following Pokemon and prints them one by one
-    print(f"{i}", end=" ")
-    count += 1
-    time.sleep(1)
-print("")
-while True: #This block of code loops the selection of Pokemon when the user inputs a Pokemon that does not exist within the Pokemon dictionary.
-    User_Pick = input("\nSelect a Pokemon: ").lower().capitalize()
-    if User_Pick in pokemon_dictionary.keys():
-        print(f"You selected {User_Pick}")
-        print("")
-        time.sleep(2)
-        User_Final_Power(User_Pick) # Calls the User_Final_Power function where it takes the User_Pick as its argument to calculate its final power based on randomness
-        break
-    else:
-        print("Enter Valid Pokemon")
-print("")
-time.sleep(2)
-print("Computer picking its Pokemon")
-
-Computer_Pick = random.choice(list(pokemon_dictionary)) # This variable receives its Pokemon based on random choice
-
-Computer_Final_Power(Computer_Pick)# Calls the Computer_Final_Power function where it takes the Computer_Pick as its argument to calculate its final power based on randomness.
-
-print("")
-time.sleep(2)
-print(f"Computer selected its Pokemon")
-time.sleep(2)
-
+    
 headers = ["Battle Number", f"{User}'s Pokemon | Power", "Computer's Pokemon | Power", "Status"] # This variable serves as header for the tabulate's headers value
-Battle_Summary = [] # This variable serves as history logs for each battle simulation
 
-round = 1
-
-print("")
-print("It's time to Battle!")
-time.sleep(1)
-print("")
-print(f"{User} vs Computer")
-time.sleep(1)
-print("")
-print(f"{User}'s Pokemon: {user_current[0]}\nPower: {user_current[1]}")
-time.sleep(3)
-print("")
-print(f"Computer's Pokemon: {computer_current[0]}\nPower: {computer_current[1]}")
-time.sleep(3)
-print("")
-print("Deciding the winner")
-print("")
-time.sleep(3)
-
-#The following conditional statements encapsulates the following possibilities of the following battles
-if user_current[1] > computer_current[1]: 
-    print(f"{User} Wins")
-    Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", f"{User} Wins"]) #This records the summary of the battle to be displayed.
-    table = tabulate(Battle_Summary, headers=headers) # This creates the table consisting of battle number, user and computers Pokemon and their powers, and the result of the battles
-    New_Power = user_current[1] + int(computer_current[1] * 0.2)
-    user_current[1] = New_Power
-    User_wins[0] += 1
-    time.sleep(2)
-    print("")
-    print("Your Pokemon is absorbing your opponents power...")
-    time.sleep(2)
-    print(f"{User}'s Pokemon's New Power: {user_current[1]}")
-    time.sleep(2)
-    print("")
-    print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-    time.sleep(2)
-    print("")
-    print(f"Battle Summary:\n\n{table}")
-    time.sleep(3)
-    print("")
-    round += 1
-    option = input("Continue('c'), Choose a new Pokemon('n'), or Quit(any character): ").lower()
-    #this nested condition statements represents the options for the user to either continue, select a new Pokemon, or quit the game
-    if option == "c":
-        computer_current.clear()
-        Adjust_Power()
-        Continue()
-    elif option == "n":
-        user_current.clear()
-        computer_current.clear()
-        New_1()
-    else:
-        print("Game Over. Thanks for Playing!")
-elif user_current[1] == computer_current[1]:
-    print("Draw!")
-    Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Draw"]) #This records the summary of the battle to be displayed.
-    table = tabulate(Battle_Summary, headers=headers) # This creates the table consisting of battle number, user and computers Pokemon and their powers, and the result of the battles
-    time.sleep(2)
-    print("")
-    print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-    time.sleep(2)
-    print("")
-    print(f"Battle Summary:\n\n{table}")
-    time.sleep(3)
-    print("")
-    round += 1
-    option = input("Continue('c'), Choose a new Pokemon('n'), or Quit(any character): ").lower()
-    #this nested condition statements represents the options for the user to either continue, select a new Pokemon, or quit the game
-    if option == "c":
-        computer_current.clear()
-        Continue()
-    elif option == "n":
-        user_current.clear()
-        computer_current.clear()
-        New_1()
-    else:
-        print("Game Over. Thanks for Playing!")
-else:
-    print("Computer Wins!")
-    Battle_Summary.append([round, f"{user_current[0]} | {user_current[1]}", f"{computer_current[0]} | {computer_current[1]}", "Computer Wins"]) #This records the summary of the battle to be displayed.
-    table = tabulate(Battle_Summary, headers=headers) # This creates the table consisting of battle number, user and computers Pokemon and their powers, and the result of the battles
-    New_Power = computer_current[1] + int(user_current[1] * 0.2)
-    computer_current[1] = New_Power
-    Computer_wins[0] += 1
-    time.sleep(2)
-    print("")
-    print("Your Opponent's Pokemon is absorbing your Pokemon's power...")
-    time.sleep(2)
-    print("")
-    print(f"Standings:\n{User}: {User_wins[0]} | Computer: {Computer_wins[0]}")
-    time.sleep(2)
-    print("")
-    print(f"Battle Summary:\n\n{table}")
-    time.sleep(3)
-    print("")
-    round += 1
-    option = input("Choose a new Pokemon('n'), or Quit(any character): ").lower()
-    #this nested condition statements represents the options for the user to either select a new Pokemon, or quit the game
-    if option == "n":
-        user_current.clear()
-        Adjust_Power()
-        New_2()
-    else:
-        print("Game Over. Thank You for Playing!")
+Pokemon_Selection()
