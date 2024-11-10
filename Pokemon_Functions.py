@@ -1,6 +1,7 @@
-
 import random as rd
+import time as t
 
+#This class serves as a function for players to select their Pokemon
 class Selecting_Pokemon:
     def __init__(self, player, count, player_mode_of_selection, Pokemon_ID, Pokemon_list, Health, Power, selected_pokemon):
         self.player = player
@@ -23,6 +24,7 @@ class Selecting_Pokemon:
                         break
                     else:
                         pass
+                t.sleep(2)
                 return [self.Pokemon_ID[pinpointer], self.Health[pinpointer], self.Power[pinpointer]]
             
             else:
@@ -40,14 +42,16 @@ class Selecting_Pokemon:
                             print("This Pokemon does not exist. Select again\n")
                     except ValueError:
                         print("Choose a Pokemon by entering their corresponding number\n")
+                t.sleep(1)
                 return [self.Pokemon_ID[pinpointer], self.Health[pinpointer], self.Power[pinpointer]]
 
+#This class serves as a function for battle simulation
 class Battle_Simulation:
     def __init__(self, player_1_Pokemon_Storage, player_1_Pokemon_Health, player_1_Pokemon_Power, 
                         player_2_Pokemon_Storage, player_2_Pokemon_Health, player_2_Pokemon_Power, 
                         Health_Potions, Poison_Potions, player_1_used_health_potions, 
                         player_1_used_poison_potions, player_2_used_health_potions, player_2_used_poison_potions,
-                        Pokemon_list, Pokemon_ID, player_1, player_2, player_1_win_count, player_2_win_count, draw_count):
+                        Pokemon_list, Pokemon_ID, player_1, player_2, player_1_win_count, player_1_lose_count, player_2_win_count, player_2_lose_count, draw_count):
         
         self.player_1_Pokemon_Storage = player_1_Pokemon_Storage
         self.player_1_Pokemon_Health = player_1_Pokemon_Health
@@ -66,7 +70,9 @@ class Battle_Simulation:
         self.player_1 = player_1
         self.player_2 = player_2
         self.player_1_win_count = player_1_win_count
+        self.player_1_lose_count = player_1_lose_count
         self.player_2_win_count = player_2_win_count
+        self.player_2_lose_count = player_2_lose_count
         self.draw_count = draw_count
     
     def Versus(self):
@@ -85,6 +91,7 @@ class Battle_Simulation:
                 break
         else:
             print(f"{self.player_1} Does not have any Pokemon left to battle")
+            t.sleep(2)
             return None
 
         p2_pokemon_count = 0
@@ -108,7 +115,9 @@ class Battle_Simulation:
         p2_pokemon_name = self.Pokemon_list[self.Pokemon_ID.index(p2)]
         
         print("\nIt's time for a Pokemon Battle!!!")
+        t.sleep(2)
         print(f"\n{p1_pokemon_name} (Health: {p1_health} | Power: {p1_power}) VS {p2_pokemon_name} (Health: {p2_health} | Power: {p2_power})")
+        t.sleep(2)
         
         if len(self.player_1_used_health_potions) != 2:
             while True:
@@ -136,9 +145,11 @@ class Battle_Simulation:
                     break
                 else:
                     print("Choose between Yes and No only.")
+                t.sleep(2)
         else:
             hchoice1 = "None"
             print(f"{self.player_1} does not have available health potions.")
+            t.sleep(2)
         
         if len(self.player_1_used_poison_potions) != 2:
             while True:
@@ -166,9 +177,11 @@ class Battle_Simulation:
                     break
                 else:
                     print("Choose between Yes and No only.")
+                t.sleep(2)
         else:
             pchoice1 = "None"
             print(f"{self.player_1} does not have available poison potions.")
+            t.sleep(2)
        
         
         if len(self.player_2_used_health_potions) != 2:
@@ -197,9 +210,11 @@ class Battle_Simulation:
                     break
                 else:
                     print("Choose between Yes and No only.")
+                t.sleep(2)
         else:
             hchoice2 = "None"
             print(f"{self.player_2} does not have available health potions.")
+            t.sleep(2)
         
         if len(self.player_2_used_poison_potions) != 2:
             while True:
@@ -227,9 +242,11 @@ class Battle_Simulation:
                     break
                 else:
                     print("Choose between Yes and No only.")
+                t.sleep(2)
         else:
             pchoice2 = "None"
             print(f"{self.player_1} does not have available poison potions.")
+            t.sleep(2)
         
         if hchoice1 == 1:
             p1_hpotion = "Normal Health Potion"
@@ -247,14 +264,14 @@ class Battle_Simulation:
 
         if hchoice2 == 1:
             p2_hpotion = "Normal Health Potion"
-        elif hchoice1 == 2:
+        elif hchoice2 == 2:
             p2_hpotion = "Advance Health Potion"
         else:
             p2_hpotion = "None"
 
         if pchoice2 == 1:
             p2_ppotion = "Normal Poison Potion"
-        elif pchoice1 == 2:
+        elif pchoice2 == 2:
             p2_ppotion = "Advance Poison Potion"
         else:
             p2_ppotion = "None"
@@ -263,12 +280,14 @@ class Battle_Simulation:
         p1_damage = int(p1_power * attack_roll)
         p2_health -= p1_damage
         print(f"\n{p1_pokemon_name} attacks {p2_pokemon_name}. It dealt {p1_damage} damage!")
+        t.sleep(2)
         print(f"{p2_pokemon_name}'s new health: {p2_health}")
 
         p2_damage = int(p2_power * attack_roll)
         p1_health -= p2_damage
 
         print(f"\n{p2_pokemon_name} attacks {p1_pokemon_name}. It dealt {p2_damage} damage!")
+        t.sleep(2)
         print(f"{p1_pokemon_name}'s new health: {p1_health}")
 
         heatlh_increase_roll = rd.randint(12,15)
@@ -287,40 +306,43 @@ class Battle_Simulation:
 
         if p1_health > p2_health:
             self.player_1_win_count += 1
+            self.player_2_lose_count += 1
             print(f"\n{self.player_1} wins this round")
+            t.sleep(1)
             status = f"{self.player_1} wins"
             print(f"{p1_pokemon_name} health increases while {p2_pokemon_name} health decreases")
+            t.sleep(2)
             p1_health += heatlh_increase_roll
             p2_health -= heatlh__decrease_roll
 
-            print(f"\nBoth Pokemon's health decreases due to fatigue")
-            p1_health -= fatigue_roll
-            p2_health -= fatigue_roll
-        
         elif p1_health == p2_health:
             self.draw_count += 1
             print(f"\nIt's a draw! No increase or decrease in health on both Pokemon due to draw")
+            t.sleep(2)
             status = f"Draw"
-            print(f"\nBoth Pokemon's health decreases due to fatigue")
-            p1_health -= fatigue_roll
-            p2_health -= fatigue_roll
+   
 
         else:
             self.player_2_win_count += 1
+            self.player_1_lose_count += 1
             print(f"\n{self.player_1} wins this round")
+            t.sleep(1)
             status = f"{self.player_2} wins"
             print(f"{p2_pokemon_name} health increases while {p1_pokemon_name} health decreases")
+            t.sleep(2)
             p2_health += heatlh_increase_roll
             p1_health -= heatlh__decrease_roll
 
         print(f"\nPokemon's health decreases due to fatigue")
+        t.sleep(1)
         p1_health -= fatigue_roll
         p2_health -= fatigue_roll
 
         print(f"{p1_pokemon_name}'s new health: {p1_health} | {p2_pokemon_name}'s new health: {p2_health}\n")
+        t.sleep(2)
 
         return [p1, p1_pokemon_name, p1_health, p1_power, 
                 p2, p2_pokemon_name, p2_health, p2_power, 
                 hchoice1, pchoice1, hchoice2, pchoice2, 
-                status, self.player_1_win_count, self.player_2_win_count, self.draw_count,
+                status, self.player_1_win_count, self.player_1_lose_count, self.player_2_win_count, self.player_2_lose_count, self.draw_count,
                 p1_health_result, p2_health_result, p1_hpotion, p1_ppotion, p2_hpotion, p2_ppotion]
