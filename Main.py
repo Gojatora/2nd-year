@@ -17,29 +17,46 @@ while True:
         break
 
 print(f"\nGreetings, {player_1} and {player_2}. Welcome to Pokemon Battle Royale: Power, Strategy, and Fatigue")
-
+t.sleep(2)
 print("\nHow does this game work?")
-print("\nBoth players will take turns when picking their desired Pokemon and the program will select the first player to select based on a coin flip")
-print("Both players can choose either 3 or 4 pokemons")
-print("If both players have the same pokemon count, that count will be set.")
+t.sleep(1)
+print("\nBoth players will take turns when picking their desired Pokemon \nand the program will select the first player to select based on a coin flip")
+t.sleep(2)
+print("\nBoth players can choose either to have 3 or 4 pokemons")
+t.sleep(1)
+print("If both players chose the same pokemon count, that count will be set.")
+t.sleep(1)
 print("If not, the program will decide on 50/50")
-print("Both players can choose whether they will pick their desired Pokemon themselves or let the Computer determine their Pokemon picks")
+t.sleep(2)
+print("\nBoth players can choose whether they will pick their \ndesired Pokemon themselves or let the Computer determine their Pokemon picks")
+t.sleep(1)
 print("Each Pokemon has its unique Health and Power.")
-print("Once the Pokemon selection is finished, they will proceed to battle each other.")
+t.sleep(2)
+print("\nOnce the Pokemon selection is finished, they will proceed to battle each other.")
+t.sleep(2)
 print("\nThe battle simulation goes like this:")
+t.sleep(1)
 print("The program will randomly pair up each Pokemon to battle each other.")
-print("Before both Pokemon attack each other, Both Players are allowed to use limited amount of health potions which heals their pokemon and poison potion to damage each other's Pokemon.")
-print("Then both Pokemons will attack each other which damages them and decrease their health.")
-print("The program will decide the winner of each battle based on their remaining health.")
+t.sleep(2)
+print("\nBefore both Pokemon attack each other, Both Players are allowed to use limited amount of \nhealth potions which heals their pokemon and poison potion to damage each other's Pokemon.")
+t.sleep(2)
+print("\nThen both Pokemons will attack each other which damages them and decrease their health.")
+t.sleep(2)
+print("\nThe program will decide the winner of each battle based on their remaining health.")
+t.sleep(2)
 print("\nAfter each battle, both pokemons will have a decreased in health due to fatigue.")
-print("The program will continue to select the Pokemon to battle until their health is 0.")
-print("Once either side has no remaining Pokemon to battle, the program will announce the overall winner based on the amount of battles won of both players.")
+t.sleep(2)
+print("\nThis battle will continue until either side do not have Pokemons to battle.")
+t.sleep(2)
+print("\nOnce either side has no remaining Pokemon to battle, the program will \nannounce the overall winner based on the amount of battles won of both players.")
+t.sleep(2)
 
 print("\nEnough yapping! It's time to get this show started!")
+t.sleep(2)
 
 #This function is the main operation of the program which contains pokemon selection as well as battle simulation
 def Battle():
-    # Pokemon_ID storage for Pokemon's ID number which can also be used as an index finder
+    # Pokemon_ID storage via arrays for Pokemon's ID number which can also be used as an index finder
     Pokemon_ID = arr.array('i', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
                              21, 22, 23, 24, 25, 26, 27, 28, 29, 30])
@@ -48,42 +65,43 @@ def Battle():
                         "Greninja", "Togepi", "Lunala", "Latias", "Gyarados", "Dragonite", "Snivy", "Kyogre", "Zoroark", "Groudon",
                         "Aggron", "Regirock", "Deoxys", "Froslass", "Altaria", "Milotic", "Crobat", "Flareon", "Gallade", "Steelix"]
 
-    Health = arr.array('i', [60, 78, 80, 79, 140, 60, 95, 160, 106, 70, 
-                            72, 85, 137, 80, 95, 91, 75, 100, 60, 100, 
-                            70, 80, 50, 70, 75, 95, 85, 65, 68, 75])
+    Health = arr.array('i', [84, 97, 87, 90, 107, 92, 95, 106, 107, 89, 
+                            90, 82, 105, 80, 95, 91, 83, 94, 99, 86, 
+                            95, 85, 89, 93, 92, 95, 85, 77, 88, 102])
 
-    Power = arr.array('i', [90, 84, 82, 83, 70, 65, 65, 110, 110, 110, 
-                            95, 50, 113, 80, 125, 134, 75, 100, 105, 150, 
-                            110, 100, 150, 80, 70, 60, 90, 130, 125, 85])
+    Power = arr.array('i', [90, 84, 99, 83, 79, 74, 78, 110, 88, 99, 
+                            95, 86, 109, 80, 109, 97, 75, 99, 84, 96, 
+                            98, 88, 96, 80, 70, 75, 90, 104, 112, 85])
 
     selected_pokemon = arr.array('i', []) # This serves as storage for selected Pokemon to avoid duplication
     
-    #The following are for player 1's Pokemon storage as well as its corresponding health and power
+    #The following uses arrays for player 1's Pokemon storage as well as its corresponding health and power
     player_1_Pokemon_Storage = arr.array('i', []) 
     player_1_Pokemon_Health = arr.array('i', [])
     player_1_Pokemon_Power = arr.array('i', [])
 
-    #The following are for player 1's Pokemon storage as well as its corresponding health and power
+    #The following uses arrays for player 2's Pokemon storage via arrays as well as its corresponding health and power
     player_2_Pokemon_Storage = arr.array('i', [])
     player_2_Pokemon_Health = arr.array('i', [])
     player_2_Pokemon_Power = arr.array('i', [])
 
-    #The following are ID for
+    #The following are ID for health and poison potions
     Health_Potions = arr.array('i', [1, 2])
     Poison_Potions = arr.array('i', [1, 2])
 
-    #The following are storage for used health and poison potions
+    #The following uses arrays as storage for used health and poison potions
     player_1_used_health_potions = arr.array('i', [])
     player_1_used_poison_potions = arr.array('i', [])
     player_2_used_health_potions = arr.array('i', [])
     player_2_used_poison_potions = arr.array('i', [])
 
-    #The following stores each player's Pokemon and their stats that will be displayed later in the program
+    #The following stores each player's Pokemon and their stats that will be used to display after Pokemon selection
     Player_1_Pokemon_Preview = []
     Player_2_Pokemon_Preview = []
 
-    
-    Battle_Summary = [] #This will store the battle history details that will be displayed after each battles
+    #The following will store the battle history details that will be displayed after each battles
+    Battle_Summary_1 = [] 
+    Battle_Summary_2 = []
 
     print("\nPicking turns: Heads or tails?")
     t.sleep(1)
@@ -186,7 +204,8 @@ def Battle():
     table_list = tb.tabulate(pokemon_preview_list, headers=header_pokemon_list, tablefmt= "pretty")
     print(table_list)
 
-    #This block of code is where both players selects their Pokemon in alternate turns until the count limit reaches the decided Pokemon count
+    #This block of code is where the Selecting_Pokemon function is called so that both players can selects their Pokemon in alternate turns until the count limit reaches the decided Pokemon count
+    #Selected Pokemons are "removed" from the Pokemon list
     count = 1
     while count <= limit:
         if turn_indicator[f"{player_1}"] == side:
@@ -239,7 +258,8 @@ def Battle():
     print(table2)
     
     #This serves as headers when printing the table for battle history
-    header_battle_summary = ["Battle Number", f"{player_1}'s Pokemon (ID) Name", "Damaged Health", "Power",  "Health Potion Used", "Poison Potion Used", " ", f"{player_2}'s Pokemon (ID) Name", "Damaged Health", "Power", "Health Potion Used", "Poison Potion Used", "Status"]
+    header_battle_summary_1 = ["Battle Number", f"{player_1}'s Pokemon (ID) Name", "Damaged Health", "Power",  "Health Potion Used", "Poison Potion Used"]
+    header_battle_summary_2 = [f"{player_2}'s Pokemon (ID) Name", "Damaged Health", "Power", "Health Potion Used", "Poison Potion Used", "Status"]
     player_1_win_count = 0
     player_1_lose_count = 0
     player_2_win_count = 0
@@ -256,11 +276,17 @@ def Battle():
                                             Pokemon_list, Pokemon_ID, player_1, player_2, player_1_win_count, player_1_lose_count, player_2_win_count, player_2_lose_count, draw_count)
         results = battle_outcome.Versus()
         if results != None:
-            Battle_Summary.append([battle_count, f"{results[0]}. {results[1]}", f"{results[18]}", f"{results[3]}", f"{results[20]}", f"{results[21]}", " ", f"{results[4]}. {results[5]}", f"{results[19]}", f"{results[7]}", f"{results[22]}", f"{results[23]}", results[12]])
-            table_summary = tb.tabulate(Battle_Summary, headers=header_battle_summary, tablefmt= "pretty")
-            print(table_summary)
+            print("\nBattle Summary:")
+            Battle_Summary_1.append([battle_count, f"{results[0]}. {results[1]}", f"{results[18]}", f"{results[3]}", f"{results[20]}", f"{results[21]}"])
+            table_summary_1 = tb.tabulate(Battle_Summary_1, headers=header_battle_summary_1, tablefmt= "pretty")
+            print(table_summary_1)
+
+            Battle_Summary_2.append([f"{results[4]}. {results[5]}", f"{results[19]}", f"{results[7]}", f"{results[22]}", f"{results[23]}", results[12]])
+            table_summary_2 = tb.tabulate(Battle_Summary_2, headers=header_battle_summary_2, tablefmt= "pretty")
+            print(table_summary_2)
+
             pinpointer = player_1_Pokemon_Storage.index(results[0])
-            player_1_Pokemon_Health[pinpointer] = results[2]
+            player_1_Pokemon_Health[pinpointer] = results[2] #Updates the health of the Pokemon used in the concluded battle
             if results[8] == "None":
                 pass
             else:
@@ -270,10 +296,9 @@ def Battle():
                 pass
             else:
                 player_1_used_poison_potions.append(results[9])
-        
-
+            
             pinpointer = player_2_Pokemon_Storage.index(results[4])
-            player_2_Pokemon_Health[pinpointer] = results[6]
+            player_2_Pokemon_Health[pinpointer] = results[6] #Updates the health of the Pokemon used in the concluded battle
             if results[10] == "None":
                 pass
             else:
@@ -291,6 +316,7 @@ def Battle():
 
             draw_count = results[17]
 
+            #Displays Statistics 
             print(f"{player_1}: {player_1_win_count} Wins / {player_1_lose_count} Loses|| {player_2}: {player_2_win_count} Wins / {(player_2_lose_count) - draw_count} Loses")
             print(f"Total draws: {draw_count}")
             battle_count += 1
@@ -298,7 +324,7 @@ def Battle():
         else:
             break
         
-
+    #Displays overall winner and final statistics
     print("\nThe Battle is Over, Deciding the Overall Winner")
     t.sleep(3)
     if player_1_win_count > player_2_win_count:
