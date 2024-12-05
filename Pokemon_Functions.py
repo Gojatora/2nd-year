@@ -1,358 +1,416 @@
 import random as rd
-import time as t
+import tabulate as tb
 
-#This class serves as a function for players to select their Pokemon
 class Selecting_Pokemon:
-    def __init__(self, player, count, player_mode_of_selection, Pokemon_ID, Pokemon_list, Health, Power, selected_pokemon):
+    def __init__(self, player, count, dtype, Pokemon_list, stage, selected_pokemon):
         self.player = player
         self.count = count
-        self.player_mode_of_selection = player_mode_of_selection
-        self.Pokemon_ID = Pokemon_ID
+        self.dtype = dtype
         self.Pokemon_list = Pokemon_list
-        self.Health = Health
-        self.Power = Power
+        self.stage = stage
         self.selected_pokemon = selected_pokemon
     
     def Selecting(self):
-            if self.player_mode_of_selection == "yes":
-                print(f"The Computer is selecting {self.player}'s Pokemon {self.count}")
-                while True:
-                    choice = rd.choice(self.Pokemon_ID)
-                    if choice not in self.selected_pokemon:
-                        pinpointer = self.Pokemon_ID.index(choice)
-                        print(f"{self.player} selected {self.Pokemon_list[pinpointer]}. {self.Pokemon_list[pinpointer]} is now unavailable.\n")
-                        break
+        while True:
+            try:
+                choice = int(input(f"{self.player}, choose your {self.stage[self.count]} Pokemon: "))
+                if choice in self.Pokemon_list["ID"]:
+                    if self.Pokemon_list[self.Pokemon_list["ID"] == choice][0][5] == self.count:
+                        if choice not in self.selected_pokemon:
+                            print(f"{self.player} selected {self.Pokemon_list[self.Pokemon_list["ID"] == choice][0][1]}. {self.Pokemon_list[self.Pokemon_list["ID"] == choice][0][1]} is now unavailable.\n")
+                            break
+                        else:
+                            print("This Pokemon is not available. Select again\n")
                     else:
-                        pass
-                t.sleep(2)
-                return [self.Pokemon_ID[pinpointer], self.Health[pinpointer], self.Power[pinpointer]]
-            
-            else:
-                while True:
-                    try:
-                        choice = int(input(f"{self.player}, choose your Pokemon {self.count}: "))
-                        if choice in self.Pokemon_ID:
-                            if choice not in self.selected_pokemon:
-                                pinpointer = self.Pokemon_ID.index(choice)
-                                print(f"{self.player} selected {self.Pokemon_list[pinpointer]}. {self.Pokemon_list[pinpointer]} is now unavailable.\n")
-                                break
-                            else:
-                                print("This Pokemon is not available. Select again\n")
-                        else:
-                            print("This Pokemon does not exist. Select again\n")
-                    except ValueError:
-                        print("Choose a Pokemon by entering their corresponding number\n")
-                t.sleep(1)
-                return [self.Pokemon_ID[pinpointer], self.Health[pinpointer], self.Power[pinpointer]]
+                        print(f"Select a {self.stage[self.count]} Pokemon")
+                else:
+                    print("This Pokemon does not exist. Select again\n")
+            except ValueError:
+                print("Choose a Pokemon by entering their corresponding number\n")
+        return self.Pokemon_list[self.Pokemon_list["ID"] == choice]
 
-#This class serves as a function for battle simulation
 class Battle_Simulation:
-    def __init__(self, player_1_Pokemon_Storage, player_1_Pokemon_Health, player_1_Pokemon_Power, 
-                        player_2_Pokemon_Storage, player_2_Pokemon_Health, player_2_Pokemon_Power, 
-                        Health_Potions, Poison_Potions, player_1_used_health_potions, 
-                        player_1_used_poison_potions, player_2_used_health_potions, player_2_used_poison_potions,
-                        Pokemon_list, Pokemon_ID, player_1, player_2, player_1_win_count, player_1_lose_count, player_2_win_count, player_2_lose_count, draw_count):
-        
-        self.player_1_Pokemon_Storage = player_1_Pokemon_Storage
-        self.player_1_Pokemon_Health = player_1_Pokemon_Health
-        self.player_1_Pokemon_Power = player_1_Pokemon_Power
-        self.player_2_Pokemon_Storage = player_2_Pokemon_Storage
-        self.player_2_Pokemon_Health = player_2_Pokemon_Health
-        self.player_2_Pokemon_Power = player_2_Pokemon_Power
-        self.Health_Potions = Health_Potions
-        self.Poison_Potions = Poison_Potions
-        self.player_1_used_health_potions = player_1_used_health_potions
-        self.player_1_used_poison_potions = player_1_used_poison_potions  
-        self.player_2_used_health_potions = player_2_used_health_potions
-        self.player_2_used_poison_potions = player_2_used_poison_potions  
-        self.Pokemon_ID = Pokemon_ID
-        self.Pokemon_list = Pokemon_list
-        self.player_1 = player_1
-        self.player_2 = player_2
-        self.player_1_win_count = player_1_win_count
-        self.player_1_lose_count = player_1_lose_count
-        self.player_2_win_count = player_2_win_count
-        self.player_2_lose_count = player_2_lose_count
-        self.draw_count = draw_count
+    def __init__(self):
+        return
+    def dequeue_pokemon(self, player_1, player_1_queue, player_2, player_2_queue):
+        print(f"")
+        player_1_current = player_1_queue.pop(0)
+        player_2_current = player_2_queue.pop(0)
+        display_selected_1 = []
+        display_selected_2 = []
+        header_display = ["Pokemon ID", "Pokemon Name", "Health", "Power", "Type"]
+        display_selected_1.append([f"{player_1_current[0]}", f"{player_1_current[1]}", f"{player_1_current[2]}", f"{player_1_current[3]}", f"{player_1_current[4]}",])
+        display_selected_2.append([f"{player_2_current[0]}", f"{player_2_current[1]}", f"{player_2_current[2]}", f"{player_2_current[3]}", f"{player_2_current[4]}",])
+        print(f"{player_1}")
+        table_list_1 = tb.tabulate(display_selected_1, headers=header_display, tablefmt= "pretty")
+        print(table_list_1)
+        print("VS")
+        print(f"{player_2}")
+        table_list_2 = tb.tabulate(display_selected_2, headers=header_display, tablefmt= "pretty")
+        print(table_list_2)
+        display_selected_1.clear()
+        display_selected_2.clear()
+        input("Enter to continue:")
+        return [player_1_current, player_2_current]
     
-    def Versus(self):
-        if self.player_1_Pokemon_Health.count(0) == 3 and self.player_2_Pokemon_Health.count(0) == 3:
-            print("Both players do not have Pokemons left to battle. The battle is over")
-            return None
-        else:
-            p1_pokemon_count = 0
-            p1_pokemon_current_count = len(self.player_1_Pokemon_Storage)
-            while p1_pokemon_count < p1_pokemon_current_count:
-                p1 = rd.choice(self.player_1_Pokemon_Storage)
-                index = self.player_1_Pokemon_Storage.index(p1)
-                p1_health = self.player_1_Pokemon_Health[index]
-                if p1_health <= 0:
-                    self.player_1_Pokemon_Storage.pop(index)
-                    self.player_1_Pokemon_Health.pop(index)
-                    p1_pokemon_count += 1
-                else:
-                    p1_power = self.player_1_Pokemon_Power[index]
+    def potion_phase(self, player_1, player_1_current, player_2, player_2_current, p1_potion_stack, p2_potion_stack):
+        base_power1 = player_1_current[3]
+        base_power2 = player_2_current[3]
+        while True:
+            if len(p1_potion_stack) != 0:
+                current_potion1 = p1_potion_stack.pop(-1)
+                print(f"{player_1}, do you wish to use your current potion {current_potion1[1]}")
+                p1_choice  = input("Yes or No?: ").lower().capitalize()
+                if p1_choice == "Yes":
+                    if current_potion1[0] == 1:
+                        print(f"{player_1} used Normal Health Potion {player_1_current[1]}'s health increased by 45")
+                        player_1_current[2] += 45
+                    elif current_potion1[0] == 2:
+                        print(f"{player_1} used Normal Health Potion {player_1_current[1]}'s health increased by 65")
+                        player_1_current[2] += 65
+                    elif current_potion1[0] == 3:
+                        print(f"{player_1} used Normal Poison Potion {player_2_current[1]}'s health decreased by 20")
+                        player_2_current[2] -= 20
+                    elif current_potion1[0] == 4:
+                        print(f"{player_1} used Normal Poison Potion {player_2_current[1]}'s health decreased by 35")
+                        player_2_current[2] -= 35
+                    elif current_potion1[0] == 5:
+                        print(f"{player_1} used Enhancement Potion {player_1_current[1]}'s Power temporarily by 15")
+                        player_1_current[3] += 15
+                    pchoice1 = current_potion1[1]
                     break
-            else:
-                print(f"\n{self.player_1} Does not have any Pokemon left to battle. The battle is over")
-                t.sleep(2)
-                return None
-
-            p2_pokemon_count = 0
-            p2_pokemon_current_count = len(self.player_2_Pokemon_Storage)
-            while p2_pokemon_count < p2_pokemon_current_count:
-                p2 = rd.choice(self.player_2_Pokemon_Storage)
-                index = self.player_2_Pokemon_Storage.index(p2)
-                p2_health = self.player_2_Pokemon_Health[index]
-                if p2_health <= 0:
-                    self.player_2_Pokemon_Storage.pop(index)
-                    self.player_2_Pokemon_Health.pop(index)
-                    p2_pokemon_count += 1
-                else:
-                    p2_power = self.player_2_Pokemon_Power[index]
-                    break
-            else:
-                print(f"\n{self.player_2} Does not have any Pokemon left to battle. The battle is over")
-                return None
-        
-        p1_pokemon_name = self.Pokemon_list[self.Pokemon_ID.index(p1)]
-        p2_pokemon_name = self.Pokemon_list[self.Pokemon_ID.index(p2)]
-        
-        print("\nIt's time for a Pokemon Battle!!!")
-        t.sleep(2)
-        print(f"\n{p1_pokemon_name} (Health: {p1_health} | Power: {p1_power}) VS {p2_pokemon_name} (Health: {p2_health} | Power: {p2_power})")
-        t.sleep(2)
-        
-        #This is where the program allows both players to select health and poison potions
-        if len(self.player_1_used_health_potions) != 2:
-            while True:
-                hpotion1 = input(f"\n{self.player_1}, Do you want to use a health potion (Yes or No)?: ").lower()
-                if hpotion1 == "yes":
-                    try:
-                        hchoice1 = int(input("Select one health potion (1: Normal Health Potion | 2: Advanced Health Potion): "))
-                        if hchoice1 not in self.player_1_used_health_potions:
-                            if hchoice1 == 1:
-                                print(f"{self.player_1} used Normal Health Potion {p1_pokemon_name}' health increased by 55")
-                                p1_health += 55
-                                break
-                            elif hchoice1 == 2:
-                                print(f"{self.player_1} used Advanced Health Potion {p1_pokemon_name}' health increased by 65")
-                                p1_health += 65
-                                break
-                            else:
-                                print("Choose 1 and 2 only")
-                        else:
-                            print("You already used this potion. Select a different one")
-                    except ValueError:
-                        print("Choose a health potion by entering their corresponding number\n")
-                elif hpotion1 == "no":
-                    hchoice1 = "None"
-                    break
-                else:
-                    print("Choose between Yes and No only.")
-                t.sleep(2)
-        else:
-            hchoice1 = "None"
-            print(f"{self.player_1} does not have available health potions.")
-            t.sleep(2)
-        if len(self.player_1_used_poison_potions) != 2:
-            while True:
-                ppotion1 = input(f"\n{self.player_1}, Do you want to use a poison potion (Yes or No)?: ").lower()
-                if ppotion1 == "yes":
-                    try:
-                        pchoice1 = int(input("Select one poison potion (1: Normal Poison Potion | 2: Advanced Poison Potion): "))
-                        if pchoice1 not in self.player_1_used_poison_potions:
-                            if pchoice1 == 1:
-                                print(f"{self.player_1} used Normal Poison Potion {p2_pokemon_name}' health decreased by 20")
-                                p1_health -= 20
-                                break
-                            elif pchoice1 == 2:
-                                print(f"{self.player_1} used Advanced Poison Potion {p2_pokemon_name}' health decreased by 35")
-                                p1_health -= 35
-                                break
-                            else:
-                                print("Choose 1 and 2 only")
-                        else:
-                            print("You already used this potion. Select a different one")
-                    except ValueError:
-                        print("Choose a health poison by entering their corresponding number\n")
-                elif ppotion1 == "no":
+                elif p1_choice == "No":
                     pchoice1 = "None"
+                    p1_potion_stack.append(current_potion1)
                     break
                 else:
-                    print("Choose between Yes and No only.")
-                t.sleep(2)
-        else:
-            pchoice1 = "None"
-            print(f"{self.player_1} does not have available poison potions.")
-            t.sleep(2)
-        if len(self.player_2_used_health_potions) != 2:
-            while True:
-                hpotion2 = input(f"\n{self.player_2}, Do you want to use a health potion (Yes or No)?: ").lower()
-                if hpotion2 == "yes":
-                    try:
-                        hchoice2 = int(input("Select one health potion (1: Normal Health Potion | 2: Advanced Health Potion): "))
-                        if hchoice2 not in self.player_2_used_health_potions:
-                            if hchoice2 == 1:
-                                print(f"{self.player_2} used Normal Health Potion {p1_pokemon_name}' health increased by 55")
-                                p2_health += 55
-                                break
-                            elif hchoice2 == 2:
-                                print(f"{self.player_2} used Advanced Health Potion {p1_pokemon_name}' health increased by 65")
-                                p2_health += 65
-                                break
-                            else:
-                                print("Choose 1 and 2 only")
-                        else:
-                            print("You already used this potion. Select a different one")
-                    except ValueError:
-                        print("Choose a health potion by entering their corresponding number\n")
-                elif hpotion2 == "no":
-                    hchoice2 = "None"
+                    print("Yes or No Only")
+                    p1_potion_stack.append(current_potion1)
+
+        while True:
+            if len(p2_potion_stack) != 0:
+                current_potion2 = p2_potion_stack.pop(-1)
+                print(f"{player_2}, do you wish to use your current potion {current_potion2[1]}")
+                p1_choice  = input("Yes or No?: ").lower().capitalize()
+                if p1_choice == "Yes":
+                    if current_potion2[0] == 1:
+                        print(f"{player_2} used Normal Health Potion {player_2_current[1]}'s health increased by 45")
+                        player_1_current[2] += 45
+                    elif current_potion2[0] == 2:
+                        print(f"{player_2} used Normal Health Potion {player_2_current[1]}'s health increased by 65")
+                        player_1_current[2] += 65
+                    elif current_potion2[0] == 3:
+                        print(f"{player_2} used Normal Poison Potion {player_1_current[1]}'s health decreased by 20")
+                        player_2_current[2] -= 20
+                    elif current_potion2[0] == 4:
+                        print(f"{player_2} used Normal Poison Potion {player_1_current[1]}'s health decreased by 35")
+                        player_2_current[2] -= 35
+                    elif current_potion2[0] == 5:
+                        print(f"{player_2} used Enhancement Potion {player_2_current[1]}'s Power temporarily by 15")
+                        player_1_current[3] += 15
+                    pchoice2 = current_potion2[1]
                     break
-                else:
-                    print("Choose between Yes and No only.")
-                t.sleep(2)
-        else:
-            hchoice2 = "None"
-            print(f"{self.player_2} does not have available health potions.")
-            t.sleep(2)
-        if len(self.player_2_used_poison_potions) != 2:
-            while True:
-                ppotion2 = input(f"\n{self.player_2}, Do you want to use a poison potion (Yes or No)?: ").lower()
-                if ppotion2 == "yes":
-                    try:
-                        pchoice2 = int(input("Select one health potion (1: Normal Poison Potion | 2: Advanced Poison Potion): "))
-                        if pchoice2 not in self.player_2_used_poison_potions:
-                            if pchoice2 == 1:
-                                print(f"{self.player_2} used Normal Poison Potion {p1_pokemon_name}' health decreased by 20")
-                                p1_health -= 20
-                                break
-                            elif pchoice2 == 2:
-                                print(f"{self.player_2} used Advanced Poison Potion {p1_pokemon_name}' health decreased by 35")
-                                p1_health -= 35
-                                break
-                            else:
-                                print("Choose 1 and 2 only")
-                        else:
-                            print("You already used this potion. Select a different one")
-                    except ValueError:
-                        print("Choose a health poison by entering their corresponding number\n")
-                elif ppotion2 == "no":
+                elif p1_choice == "No":
                     pchoice2 = "None"
+                    p2_potion_stack.append(current_potion2)
                     break
                 else:
-                    print("Choose between Yes and No only.")
-                t.sleep(2)
-        else:
-            pchoice2 = "None"
-            print(f"{self.player_2} does not have available poison potions.")
-            t.sleep(2)
+                    print("Yes or No ONly")
+                    p2_potion_stack.append(current_potion2)
         
-        if hchoice1 == 1:
-            p1_hpotion = "Normal Health Potion"
-        elif hchoice1 == 2:
-            p1_hpotion = "Advance Health Potion"
-        else:
-            p1_hpotion = "None"
+        return [player_1_current, player_2_current, pchoice1, pchoice2, base_power1, base_power2]
 
-        if pchoice1 == 1:
-            p1_ppotion = "Normal Poison Potion"
-        elif pchoice1 == 2:
-            p1_ppotion = "Advance Poison Potion"
-        else:
-            p1_ppotion = "None"
-
-        if hchoice2 == 1:
-            p2_hpotion = "Normal Health Potion"
-        elif hchoice2 == 2:
-            p2_hpotion = "Advance Health Potion"
-        else:
-            p2_hpotion = "None"
-
-        if pchoice2 == 1:
-            p2_ppotion = "Normal Poison Potion"
-        elif pchoice2 == 2:
-            p2_ppotion = "Advance Poison Potion"
-        else:
-            p2_ppotion = "None"
+    
+    def battle_phase(self, player_1, player_1_current, player_2, player_2_current, base_power1, base_power2):
+        def damage_multiplier(player, curr_pokemon_1, curr_pokemon_2):
+            if player == player_1:
+                if curr_pokemon_1[4] == "Normal":
+                    if curr_pokemon_2[4] in ["Fighting"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_1[4] == "Fire":
+                    if curr_pokemon_2[4] in ["Grass", "Ice"]:
+                        print(f"{curr_pokemon_1[1]} is strong against {curr_pokemon_2[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_1[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_2[4] in ["Water", "Fire"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_1[4] == "Water":
+                    if curr_pokemon_2[4] in ["Fire", "Ground"]:
+                        print(f"{curr_pokemon_1[1]} is strong against {curr_pokemon_2[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_1[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_2[4] in ["Grass", "Water"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_1[4] == "Electric":
+                    if curr_pokemon_2[4] in ["Water"]:
+                        print(f"{curr_pokemon_1[1]} is strong against {curr_pokemon_2[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_1[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_2[4] in ["Grass", "Ground"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_1[4] == "Grass":
+                    if curr_pokemon_2[4] in ["Ground"]:
+                        print(f"{curr_pokemon_1[1]} is strong against {curr_pokemon_2[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_1[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_2[4] in ["Fire", "Poison"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_1[4] == "Fighting":
+                    if curr_pokemon_2[4] in ["Ice", "Normal"]:
+                        print(f"{curr_pokemon_1[1]} is strong against {curr_pokemon_2[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_1[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_2[4] in ["Poison", "Fairy"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_1[4] == "Poison":
+                    if curr_pokemon_2[4] in ["Grass", "Fairy"]:
+                        print(f"{curr_pokemon_1[1]} is strong against {curr_pokemon_2[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_1[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_2[4] in ["Ground"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_1[4] == "Ground":
+                    if curr_pokemon_2[4] in ["Electric"]:
+                        print(f"{curr_pokemon_1[1]} is strong against {curr_pokemon_2[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_1[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_2[4] in ["Grass"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_1[4] == "Ice":
+                    if curr_pokemon_2[4] in ["Ground", "Grass"]:
+                        print(f"{curr_pokemon_1[1]} is strong against {curr_pokemon_2[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_1[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_2[4] in ["Water", "Ice"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_1[4] == "Fairy":
+                    if curr_pokemon_2[4] in ["Fighting"]:
+                        print(f"{curr_pokemon_1[1]} is strong against {curr_pokemon_2[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_1[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_2[4] in ["Fire", "Poison"]:
+                        print(f"{curr_pokemon_1[1]} is weak against {curr_pokemon_2[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_1[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_1[1]} is not weak or strong against {curr_pokemon_2[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_1[3] * rd.uniform(0.22, 0.28)
+                    
+            elif player == player_2:
+                if curr_pokemon_2[4] == "Normal":
+                    if curr_pokemon_1[4] in ["Fighting"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_2[4] == "Fire":
+                    if curr_pokemon_1[4] in ["Grass", "Ice"]:
+                        print(f"{curr_pokemon_2[1]} is strong against {curr_pokemon_1[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_2[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_1[4] in ["Water", "Fire"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_2[4] == "Water":
+                    if curr_pokemon_1[4] in ["Fire", "Ground"]:
+                        print(f"{curr_pokemon_2[1]} is strong against {curr_pokemon_1[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_2[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_1[4] in ["Grass", "Water"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_2[4] == "Electric":
+                    if curr_pokemon_1[4] in ["Water"]:
+                        print(f"{curr_pokemon_2[1]} is strong against {curr_pokemon_1[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_2[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_1[4] in ["Grass", "Ground"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_2[4] == "Grass":
+                    if curr_pokemon_1[4] in ["Ground", "Water"]:
+                        print(f"{curr_pokemon_2[1]} is strong against {curr_pokemon_1[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_2[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_1[4] in ["Fire", "Poison"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_2[4] == "Fighting":
+                    if curr_pokemon_1[4] in ["Ice", "Normal"]:
+                        print(f"{curr_pokemon_2[1]} is strong against {curr_pokemon_1[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_2[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_1[4] in ["Poison", "Fairy"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_2[4] == "Poison":
+                    if curr_pokemon_1[4] in ["Grass", "Fairy"]:
+                        print(f"{curr_pokemon_2[1]} is strong against {curr_pokemon_1[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_2[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_1[4] in ["Ground"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_2[4] == "Ground":
+                    if curr_pokemon_1[4] in ["Electric"]:
+                        print(f"{curr_pokemon_2[1]} is strong against {curr_pokemon_1[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_2[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_1[4] in ["Grass"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_2[4] == "Ice":
+                    if curr_pokemon_1[4] in ["Grass", "Ground"]:
+                        print(f"{curr_pokemon_2[1]} is strong against {curr_pokemon_1[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_2[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_1[4] in ["Water", "Ice"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+                elif curr_pokemon_2[4] == "Fairy":
+                    if curr_pokemon_1[4] in ["Fighting"]:
+                        print(f"{curr_pokemon_2[1]} is strong against {curr_pokemon_1[1]}. Strong Damage dealt will be increased")
+                        return curr_pokemon_2[3] * rd.uniform(0.30, 0.40)
+                    elif curr_pokemon_1[4] in ["Fire", "Poison"]:
+                        print(f"{curr_pokemon_2[1]} is weak against {curr_pokemon_1[1]}. Weak damage multiplier will be applied")
+                        return curr_pokemon_2[3] * rd.uniform(0.10, 0.20)
+                    else:
+                        print(f"{curr_pokemon_2[1]} is not weak or strong against {curr_pokemon_1[1]}. Damage multiplier is neutral")
+                        return curr_pokemon_2[3] * rd.uniform(0.22, 0.28)
+     
         
-        attack_roll = rd.uniform(0.25, 0.45)
-        p1_damage = int(p1_power * attack_roll)
-        p2_health -= p1_damage
-        print(f"\n{p1_pokemon_name} attacks {p2_pokemon_name}. It dealt {p1_damage} damage!")
-        t.sleep(2)
-        print(f"{p2_pokemon_name}'s new health: {p2_health}")
+        p1_damage = int(damage_multiplier(player_1, player_1_current, player_2_current))
+        player_2_current[2] -= p1_damage
+        print(f"\n{player_1_current[1]} attacks {player_2_current[1]}. It dealt {p1_damage} damage!")
+        
+        print(f"{player_2_current[1]}'s new health: {player_2_current[2]}")
+        
 
-        p2_damage = int(p2_power * attack_roll)
-        p1_health -= p2_damage
+        p2_damage = int(damage_multiplier(player_2, player_1_current, player_2_current))
+        player_1_current[2] -= p2_damage
 
-        print(f"\n{p2_pokemon_name} attacks {p1_pokemon_name}. It dealt {p2_damage} damage!")
-        t.sleep(2)
-        print(f"{p1_pokemon_name}'s new health: {p1_health}")
+        print(f"\n{player_2_current[1]} attacks {player_1_current[1]}. It dealt {p2_damage} damage!")
+        
+        print(f"{player_1_current[1]}'s new health: {player_1_current[2]}")
+     
+        p1_health_result = player_1_current[2]
+        p2_health_result = player_2_current[2]
+
+        player_1_current[3] = base_power1
+        player_2_current[3] = base_power2
+
+        input("Enter to continue")
+        return [player_1_current, player_2_current, p1_health_result, p2_health_result]
+    
+    def decision_phase(self, player_1, player_1_current, player_2, player_2_current, draw_count):
+        #Adjusts the Pokemon's health. The winner gains health while the loser loses health
+        if player_1_current[2] > player_2_current[2]:
+            print(f"\n{player_1} wins this round")
+            
+            status = f"{player_1} wins"
+            print(f"{player_1_current[1]} health increases while {player_2_current[1]} health decreases")
+
+        elif player_1_current[2] == player_2_current[2]:
+            draw_count += 1
+            print(f"\nIt's a draw! No increase or decrease in health on both Pokemon due to draw")
+            
+            status = "Draw"
+   
+        else:
+            print(f"\n{player_2} wins this round")
+            
+            status = f"{player_2} wins"
+            print(f"{player_2_current[1]} health increases while {player_1_current[1]} health decreases")
+
+        return [player_1_current, player_2_current, draw_count, status]
+
+    def adjusting_health(self, player_1, player_1_current, player_2, player_2_current, status):
 
         heatlh_increase_roll = rd.randint(5,10)
         heatlh__decrease_roll = rd.randint(4,8)
         fatigue_roll = rd.randint(2, 4)
 
-     
-        p1_health_result = p1_health
-        p2_health_result = p2_health
+        if status == f"{player_1} wins":
+            player_1_current[2] += heatlh_increase_roll
+            player_2_current[2] -= heatlh__decrease_roll
 
-        #Adjusts the Pokemon's health. The winner gains health while the loser loses health
-        if p1_health > p2_health:
-            self.player_1_win_count += 1
-            self.player_2_lose_count += 1
-            print(f"\n{self.player_1} wins this round")
-            t.sleep(1)
-            status = f"{self.player_1} wins"
-            print(f"{p1_pokemon_name} health increases while {p2_pokemon_name} health decreases")
-            t.sleep(2)
-            p1_health += heatlh_increase_roll
-            p2_health -= heatlh__decrease_roll
-
-        elif p1_health == p2_health:
-            self.draw_count += 1
-            print(f"\nIt's a draw! No increase or decrease in health on both Pokemon due to draw")
-            t.sleep(2)
-            status = f"Draw"
-   
-
+        elif status == "Draw":
+            pass
+        
         else:
-            self.player_2_win_count += 1
-            self.player_1_lose_count += 1
-            print(f"\n{self.player_2} wins this round")
-            t.sleep(1)
-            status = f"{self.player_2} wins"
-            print(f"{p2_pokemon_name} health increases while {p1_pokemon_name} health decreases")
-            t.sleep(2)
-            p2_health += heatlh_increase_roll
-            p1_health -= heatlh__decrease_roll
-
+            player_2_current[2] += heatlh_increase_roll
+            player_1_current[2] -= heatlh__decrease_roll
+            
         #After health adjustments, the program will decrease both Pokemon's health due to fatigue
         print(f"\nPokemon's health decreases due to fatigue")
-        t.sleep(1)
-        p1_health -= fatigue_roll
-        p2_health -= fatigue_roll
+        
+        player_1_current[2] -= fatigue_roll
+        player_2_current[2] -= fatigue_roll
 
-        print(f"{p1_pokemon_name}'s new health: {p1_health} | {p2_pokemon_name}'s new health: {p2_health}\n")
-        t.sleep(2)
+        print(f"{player_1_current[1]}'s new health: {player_1_current[2]} | {player_2_current[1]}'s new health: {player_2_current[2]}")
 
-        if p1_health > 0:
+        return [player_1_current, player_2_current]
+
+       
+   
+    def checking_remaining_pokemon(self, player_1, player_1_current, player_2, player_2_current):
+        print(f"For {player_1}:")
+        if player_1_current[2] > 0:
+            print(f"{player_1_current[1]} can keep going. Returning to queue")
             pass
         else:
-            print(f"{p1_pokemon_name}'s health reaches 0 or below. They are out!")
-            t.sleep(1)
+            print(f"{player_1_current[1]}'s health reaches 0 or below. They are out!")
 
-        if p2_health > 0:
+        print(f"For {player_2}:")
+        if player_2_current[2] > 0:
+            print(f"{player_2_current[1]} can keep going. Returning to queue")
             pass
         else:
-            print(f"{p2_pokemon_name}'s health reaches 0 or below. They are out!")
-            t.sleep(1)
+            print(f"{player_2_current[1]}'s health reaches 0 or below. They are out!")
+        
+        input("Enter to continue")
 
-
-        return [p1, p1_pokemon_name, p1_health, p1_power, 
-                p2, p2_pokemon_name, p2_health, p2_power, 
-                hchoice1, pchoice1, hchoice2, pchoice2, 
-                status, self.player_1_win_count, self.player_1_lose_count, self.player_2_win_count, self.player_2_lose_count, self.draw_count,
-                p1_health_result, p2_health_result, p1_hpotion, p1_ppotion, p2_hpotion, p2_ppotion]
+        return[player_1_current, player_2_current]
